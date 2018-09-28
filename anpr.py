@@ -14,6 +14,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -43,10 +44,11 @@ def upload_file():
     </form>
     '''
 
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    cmd = "alpr -c gb " + app.config['UPLOAD_FOLDER'] + filename + " | awk '{print $2}' | grep -x '.\{7\}' | head -1"
-    #return os.popen(cmd).read()
+    cmd = "alpr -c gb " + app.config['UPLOAD_FOLDER'] + filename + " | awk '{print $2}' | head -2 | tail -1"
+    # return os.popen(cmd).read()
     registration = os.popen(cmd).read()
     retval = '<!doctype html><meta http-equiv=\"Refresh\" content=0;URL=\"https://www.regit.cars/car/' + registration + '/interested\"><title>Redirecting to vehicle details</title>'
     return retval
